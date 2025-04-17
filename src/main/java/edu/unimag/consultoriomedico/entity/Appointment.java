@@ -33,8 +33,8 @@ public class Appointment {
     @NotNull(message = "Consult room is mandatory")
     private ConsultRoom consultRoom;
 
-    @Column(name = "star_time", nullable = false)
-    @NotBlank(message = "Start time is mandatory")
+    @Column(name = "start_time", nullable = false)
+    @NotNull(message = "Start time is mandatory")
     @Future(message = "Start time must be in the future")
     private LocalDateTime startTime;
 
@@ -45,6 +45,7 @@ public class Appointment {
     @Column(name = "status", nullable = false)
     private Status status;
 
-
+    @OneToOne(mappedBy = "appointment")
+    private MedicalRecord medicalRecord;
 
 }
