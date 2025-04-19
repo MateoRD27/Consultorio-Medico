@@ -38,10 +38,11 @@ public class Doctor {
     private String email;
 
     @Column(name = "available_from", nullable = false) //Horario de inicio
-    @NotBlank(message = "Available from is mandatory")
+    @NotNull(message = "Available from is mandatory")
     private LocalTime availableFrom;
 
     @Column(name = "available_to") //Horario de fin
+    @NotNull(message = "Available from is mandatory")
     private LocalTime availableTo;
 
     //un doctor tiene muchas citas
