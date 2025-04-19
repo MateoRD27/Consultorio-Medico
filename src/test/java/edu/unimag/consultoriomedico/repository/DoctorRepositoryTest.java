@@ -30,7 +30,7 @@ class DoctorRepositoryTest {
                 .fullName("Dr. Florez")
                 .identificationNumber(123456789L)
                 .specialty("Medicina General")
-                .email("doctor.florez@example.com")
+                .email("doctor.florez@gmail.com")
                 .availableFrom(LocalTime.of(8, 0))
                 .availableTo(LocalTime.of(17, 0))
                 .build());
@@ -39,7 +39,7 @@ class DoctorRepositoryTest {
                 .fullName("Dr. Cantillo")
                 .identificationNumber(12345L)
                 .specialty("Cirujano")
-                .email("doctor.cantillo@example.com")
+                .email("doctor.cantillo@gmail.com")
                 .availableFrom(LocalTime.of(8, 0))
                 .availableTo(LocalTime.of(17, 0))
                 .build());
@@ -47,16 +47,16 @@ class DoctorRepositoryTest {
 
     @Test
     void shouldSaveAndFindDoctor() {
-        Doctor doctorPrueba = doctorRepository.save(Doctor.builder()
+        Doctor doctorTest = doctorRepository.save(Doctor.builder()
                 .fullName("Dr. Ramos")
                 .identificationNumber(21222L)
                 .specialty("Pediatra")
-                .email("doctor.ramos@example.com")
+                .email("doctor.ramos@gmail.com")
                 .availableFrom(LocalTime.of(8, 0))
                 .availableTo(LocalTime.of(17, 0))
                 .build());
 
-        Optional<Doctor> result = doctorRepository.findById(doctorPrueba.getId());
+        Optional<Doctor> result = doctorRepository.findById(doctorTest.getId());
 
         assertTrue(result.isPresent());
         assertEquals("Dr. Ramos", result.get().getFullName());
@@ -76,7 +76,7 @@ class DoctorRepositoryTest {
     }
 
     @Test
-    void shouldUpdateRoom() {
+    void shouldUpdateDoctor() {
         doctor1.setAvailableFrom(LocalTime.of(5, 0));
         Doctor updated = doctorRepository.save(doctor1);
 
@@ -84,7 +84,7 @@ class DoctorRepositoryTest {
     }
 
     @Test
-    void shouldDeleteRoom() {
+    void shouldDeleteDoctor() {
         Long id = doctor2.getId();
         doctorRepository.deleteById(id);
         assertFalse(doctorRepository.findById(id).isPresent());
