@@ -23,12 +23,11 @@ public class ConsultRoom {
     private String name;
 
     @Column(name = "room_number", nullable = false, unique = true)
-    @NotBlank(message = "Room number is mandatory")
+    @NotNull(message = "Room number is mandatory")
     private Integer roomNumber;
 
     @Column(name = "floor", nullable = false) //Piso
     @NotNull(message = "Floor is mandatory")
-    @NotBlank(message = "Floor is mandatory")
     private Integer floor;
 
     @Column(name = "description")
