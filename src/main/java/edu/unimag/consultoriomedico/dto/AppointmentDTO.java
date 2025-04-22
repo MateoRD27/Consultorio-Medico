@@ -27,9 +27,6 @@ public class AppointmentDTO {
     @NotNull
     private Long consultRoomId;
 
-    @NotNull
-    private Long medicalRecordId;
-
     @Future
     private LocalDateTime startTime;
 
