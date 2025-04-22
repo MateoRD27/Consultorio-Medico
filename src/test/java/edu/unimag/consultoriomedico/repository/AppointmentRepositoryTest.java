@@ -178,4 +178,25 @@ class AppointmentRepositoryTest {
                 consultRoom,  end.plusHours(5), start.plusHours(3));
         assertFalse(exists2);
     }
+
+    @Test
+    void findByDoctorIdentificationNumberAndDate() {
+        LocalDateTime start = LocalDateTime.now().plusDays(1).withHour(10);
+        LocalDateTime end = start.plusHours(1);
+
+        appointmentRepository.save(Appointment.builder()
+                .patient(patient)
+                .doctor(doctor)
+                .consultRoom(consultRoom)
+                .startTime(start)
+                .endTime(end)
+                .status(Status.SCHEDULED)
+                .build());
+
+        List<Appointment> result = appointmentRepository.findByDoctorIdentificationNumberAndDate(
+                doctor.getIdentificationNumber(), start.toLocalDate());
+
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+    }
 }

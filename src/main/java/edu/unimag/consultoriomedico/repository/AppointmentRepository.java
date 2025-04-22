@@ -33,5 +33,11 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     //verificar si un consultorio ya tiene una cita en un intervalo de tiempo
     boolean existsByConsultRoomAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(ConsultRoom consultRoom, LocalDateTime endTime, LocalDateTime startTime);
 
+    //Obtener las citas de un doctor dado su identificationNumber de un dia dado
+    @Query("SELECT a FROM Appointment a WHERE a.doctor.identificationNumber = :identificationNumber AND " +
+            "DATE(a.startTime) = :date")
+    List<Appointment> findByDoctorIdentificationNumberAndDate(@Param("identificationNumber") Long identificationNumber,
+                                                               @Param("date") LocalDate date);
+
 
 }

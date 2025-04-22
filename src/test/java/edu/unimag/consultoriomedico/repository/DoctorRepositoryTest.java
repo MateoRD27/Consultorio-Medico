@@ -90,4 +90,16 @@ class DoctorRepositoryTest {
         assertFalse(doctorRepository.findById(id).isPresent());
     }
 
+    @Test
+    void findByAvailableFromLessThanEqualAndAvailableToGreaterThanEqual() {
+        List<Doctor> result = doctorRepository.findByAvailableFromLessThanEqualAndAvailableToGreaterThanEqual(LocalTime.of(9, 0), LocalTime.of(16, 0));
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void findByIdentificationNumberAndAvailableFromLessThanEqualAndAvailableToGreaterThanEqual() {
+        Optional<Doctor> result = doctorRepository.findByIdentificationNumberAndAvailableFromLessThanEqualAndAvailableToGreaterThanEqual(123456789L, LocalTime.of(9, 0), LocalTime.of(16, 0));
+        assertTrue(result.isPresent());
+        assertEquals("Dr. Florez", result.get().getFullName());
+    }
 }
