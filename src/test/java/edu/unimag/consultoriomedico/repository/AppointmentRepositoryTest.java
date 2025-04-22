@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Optional;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,7 +40,10 @@ class AppointmentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-
+        appointmentRepository.deleteAll();
+        patientRepository.deleteAll();
+        consultRoomRepository.deleteAll();
+        doctorRepository.deleteAll();
         doctor = doctorRepository.save(Doctor.builder()
                 .fullName("Dr. Ramos")
                 .identificationNumber(123456789L)
@@ -110,7 +113,7 @@ class AppointmentRepositoryTest {
     }
 
     @Test
-    void shouldFindFinishedAppointment() {
+    void shouldFindStatusAppointment() {
         LocalDateTime start = LocalDateTime.now().plusHours(1).withMinute(0).withSecond(0).withNano(0);
         LocalDateTime end = start.plusHours(1);
 
@@ -126,9 +129,7 @@ class AppointmentRepositoryTest {
 
         Appointment saved = appointmentRepository.save(completed);
 
-        Optional<Appointment> result = appointmentRepository.findCompletedAppointment(saved.getId());
-
-        assertTrue(result.isPresent());
-        assertEquals(Status.COMPLETED, result.get().getStatus());
+        Status result = appointmentRepository.findStatusAppointment(saved.getId());
+        assertEquals(Status.COMPLETED, result);
     }
 }

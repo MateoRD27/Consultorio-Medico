@@ -1,15 +1,14 @@
 package edu.unimag.consultoriomedico.repository;
 
 import edu.unimag.consultoriomedico.entity.Appointment;
+import edu.unimag.consultoriomedico.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
@@ -21,8 +20,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                                          @Param("startTime") LocalDateTime startTime,
                                          @Param("endTime") LocalDateTime endTime);
 
-    //Buscar si la cita terminó
-    @Query("SELECT a FROM Appointment a WHERE a.id = :appointmentId AND a.status = 'COMPLETED'")
-    Optional<Appointment> findCompletedAppointment(Long appointmentId);
+    //Buscar estado de la cita
+    @Query("SELECT a.status FROM Appointment a WHERE a.id = :appointmentId")
+    Status findStatusAppointment(Long appointmentId);
 
 }
