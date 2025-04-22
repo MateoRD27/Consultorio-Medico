@@ -23,15 +23,17 @@ public class ConsultRoom {
     private String name;
 
     @Column(name = "room_number", nullable = false, unique = true)
+    @Positive
     @NotNull(message = "Room number is mandatory")
     private Integer roomNumber;
 
     @Column(name = "floor", nullable = false) //Piso
+    @Positive
     @NotNull(message = "Floor is mandatory")
     private Integer floor;
 
     @Column(name = "description")
-    @Size(max = 500, message = "Description must be less than 255 characters")
+    @Size(max = 255, message = "Description must be less than 255 characters")
     private String description;
 
     //una sala de consulta tiene muchas citas
