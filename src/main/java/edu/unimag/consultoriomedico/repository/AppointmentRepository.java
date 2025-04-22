@@ -1,6 +1,8 @@
 package edu.unimag.consultoriomedico.repository;
 
 import edu.unimag.consultoriomedico.entity.Appointment;
+import edu.unimag.consultoriomedico.entity.ConsultRoom;
+import edu.unimag.consultoriomedico.entity.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -24,5 +26,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     //Buscar si la cita terminó
     @Query("SELECT a FROM Appointment a WHERE a.id = :appointmentId AND a.status = 'COMPLETED'")
     Optional<Appointment> findCompletedAppointment(Long appointmentId);
+
+    //verificar si un doctor ya tiene una cita en un intervalo de tiempo
+    boolean existsByDoctorAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Doctor doctor, LocalDateTime endTime, LocalDateTime startTime);
+
+    //verificar si un consultorio ya tiene una cita en un intervalo de tiempo
+    boolean existsByConsultRoomAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(ConsultRoom consultRoom, LocalDateTime endTime, LocalDateTime startTime);
+
 
 }
