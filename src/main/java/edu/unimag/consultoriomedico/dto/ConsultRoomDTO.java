@@ -26,7 +26,7 @@ public class ConsultRoomDTO {
     @NotNull(message = "Floor is mandatory")
     private Integer floor;
 
-    @Size(max = 255, message = "Description must be less than 255 characters")
+    @Size(max = 500, message = "Description must be less than 500 characters")
     private String description;
 
 

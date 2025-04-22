@@ -18,19 +18,19 @@ import java.time.LocalDateTime;
 public class AppointmentDTO {
     private Long id;
 
-    @NotNull
+    @NotNull( message = "Patient is mandatory")
     private Long patientId;
 
-    @NotNull
+    @NotNull( message = "Doctor is mandatory")
     private Long doctorId;
 
-    @NotNull
+    @NotNull( message = "Consult room is mandatory")
     private Long consultRoomId;
 
-    @Future
+    @Future( message = "Start time must be in the future")
     private LocalDateTime startTime;
 
-    @Future
+    @Future( message = "End time must be in the future")
     private LocalDateTime endTime;
 
     private Status status;

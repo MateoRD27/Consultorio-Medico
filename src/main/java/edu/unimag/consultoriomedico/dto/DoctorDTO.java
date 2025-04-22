@@ -18,23 +18,23 @@ import java.time.LocalTime;
 public class DoctorDTO {
     private Long id;
 
-    @NotBlank
+    @NotBlank( message = "Full name is mandatory")
     private String fullName;
 
     @NotNull
     private Long identificationNumber;
 
-    @NotBlank
-    @Size(min = 3, max = 50, message = "Specialty must be between 3 and 50 characters")
+    @NotBlank(message = "Identification type is mandatory")
+    @Size(min = 3, max = 100, message = "Specialty must be between 3 and 100 characters")
     private String specialty;
 
-    @Email
-    @NotBlank
+    @Email( message = "Email should be valid")
+    @NotBlank( message = "Email is mandatory")
     private String email;
 
-    @NotNull
+    @NotNull( message = "Phone number is mandatory")
     private LocalTime availableFrom;
 
-    @NotNull
+    @NotNull( message = "Phone number is mandatory")
     private LocalTime availableTo;
 }
