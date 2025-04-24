@@ -14,6 +14,8 @@ public class PatientServiceImpl implements PatientService {
 
     PatientRepository patientRepository;
     PatientMapper patientMapper;
+
+    //obtener todos los paciente
     @Override
     public List<PatientDTO> getAllPatients() {
         return patientRepository.findAll().stream()
@@ -21,12 +23,14 @@ public class PatientServiceImpl implements PatientService {
                 .toList();
     }
 
+    //Obtener un paciente por su ID
     @Override
     public PatientDTO getPatientById(Long id) {
         return patientRepository.findById(id)
                 .map(patientMapper::toDTO).orElseThrow(()->new ResourceNotFoundException("Patient not found"));
     }
 
+    //Crear un nuevo paciente
     @Override
     public PatientDTO createPatient(PatientDTO patientDto) {
         //verificar si el patient ya existe
@@ -37,11 +41,21 @@ public class PatientServiceImpl implements PatientService {
         return patientMapper.toDTO(patientRepository.save(patient));
     }
 
+    //Actualizar un paciente
     @Override
     public PatientDTO updatePatient(Long id, PatientDTO patientDto) {
-        return null;
+        return patientRepository.findById(id)
+                .map(userInDB ->{
+                    userInDB.setFullName(patientDto.getFullName());
+                    userInDB.setIdentificationNumber(patientDto.getIdentificationNumber());
+                    userInDB.setEmail(patientDto.getEmail());
+                    userInDB.setPhoneNumber(patientDto.getPhoneNumber());
+                    return patientMapper.toDTO(patientRepository.save(userInDB));
+                })
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + id));
     }
 
+    //Elimiinar un paciente
     @Override
     public void deletePatient(Long id) {
         if(!patientRepository.existsById(id)) {
