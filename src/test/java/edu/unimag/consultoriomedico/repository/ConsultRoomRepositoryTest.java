@@ -78,4 +78,13 @@ class ConsultRoomRepositoryTest {
 
         assertFalse(consultRoomRepository.findById(id).isPresent());
     }
+
+    @Test
+    void findByRoomNumber() {
+        Integer roomNumber = 101;
+        Optional<ConsultRoom> result = consultRoomRepository.findByRoomNumber(roomNumber);
+
+        assertTrue(result.isPresent());
+        assertEquals(room1.getId(), result.get().getId());
+    }
 }

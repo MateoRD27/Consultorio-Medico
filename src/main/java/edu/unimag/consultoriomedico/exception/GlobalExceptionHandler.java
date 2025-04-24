@@ -135,4 +135,16 @@ public class GlobalExceptionHandler {
     //excepciones con respecto a MedicalRecords
 
     //excepciones con respecto a ConsultRoom
+    //maneja la excepcion cuando pida todos los consultorios
+    @ExceptionHandler(NoDataFoundException.class)
+    public ResponseEntity<ApiError> handleNoDataFound(NoDataFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .errors(null)
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 }
