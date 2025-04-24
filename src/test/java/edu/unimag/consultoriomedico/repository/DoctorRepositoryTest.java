@@ -102,4 +102,11 @@ class DoctorRepositoryTest {
         assertTrue(result.isPresent());
         assertEquals("Dr. Florez", result.get().getFullName());
     }
+
+    @Test
+    void findByIdentificationNumber() {
+        Optional<Doctor> result = doctorRepository.findByIdentificationNumber(123456789L);
+        assertTrue(result.isPresent());
+        assertEquals("Dr. Florez", result.get().getFullName());
+    }
 }

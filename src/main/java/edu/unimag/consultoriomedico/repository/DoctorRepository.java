@@ -18,5 +18,7 @@ public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     //validar si un doctor dado su identificationNumber esta disponible en un horario determinado
     Optional<Doctor> findByIdentificationNumberAndAvailableFromLessThanEqualAndAvailableToGreaterThanEqual(Long identificationNumber, LocalTime startTime, LocalTime endTime);
 
+    //Buscar un doctor por su numero de identificacion
+    Optional<Doctor> findByIdentificationNumber(Long identificationNumber);
 
 }
