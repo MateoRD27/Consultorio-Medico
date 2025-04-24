@@ -9,12 +9,18 @@ public interface DoctorService {
     List<DoctorDTO> getAllDoctors();
     //obtener el doctor por su id
     DoctorDTO getDoctorById(Long id);
+
+    //Obtener doctores por especialidad
+    List<DoctorDTO> getDoctorsBySpecialty(String specialty);
+
     //crear un doctor
     DoctorDTO createDoctor(DoctorDTO doctorDto);
     //actualizar doctor
     DoctorDTO updateDoctor(Long id, DoctorDTO doctorDto);
     //eliminar doctor
     void deleteDoctor(Long id);
+
+
 
 
 }

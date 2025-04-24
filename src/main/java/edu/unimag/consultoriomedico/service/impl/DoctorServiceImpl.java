@@ -66,4 +66,15 @@ public class DoctorServiceImpl implements DoctorService {
         }
         doctorRepository.deleteById(id);
     }
+
+    @Override
+    public List<DoctorDTO> getDoctorsBySpecialty(String specialty) {
+        List<DoctorDTO> listDoctor = doctorRepository.findBySpecialty(specialty).stream()
+                .map(doctorMapper::toDTO)
+                .toList();
+        if(listDoctor.isEmpty()) {
+            throw new ResourceNotFoundException("Doctors not found with special type: " + specialty);
+        }
+        return listDoctor;
+    }
 }
