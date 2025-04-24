@@ -13,6 +13,19 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    //maneja cuando no encuentra un recurso
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleResourceNotFound(ResourceNotFoundException ex) {
+        ApiError error = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .message(ex.getMessage())
+                .errors(null)
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
     // Maneja las excepciones lanzadas cuando fallan las validaciones de los datos de entrada (por ejemplo, @NotNull, @Email, etc.)
     // Devuelve un error 400 (BAD REQUEST) con el mensaje de la excepción.
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -90,18 +103,6 @@ public class GlobalExceptionHandler {
 
     //excepciones con respecto a pacientes
 
-    // Maneja las excepciones cuando no se encuentra un paciente en el sistema
-    @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<ApiError> handlePatientNotFound(PatientNotFoundException ex) {
-        ApiError apiError = ApiError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.NOT_FOUND.value())
-                .message(ex.getMessage())
-                .errors(null)
-                .build();
-
-        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
-    }
 
     //excepciones con respecto a citas
 
@@ -131,22 +132,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
-
-
     //excepciones con respecto a MedicalRecords
-
-    // Maneja la excepción cuando no se encuentra un historial médico asociado a una cita
-    @ExceptionHandler(MedicalRecordNotFoundException.class)
-    public ResponseEntity<ApiError> handleMedicalRecordNotFound(MedicalRecordNotFoundException ex) {
-        ApiError apiError = ApiError.builder()
-                .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .message(ex.getMessage())
-                .errors(null)
-                .build();
-
-        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
-    }
 
     //excepciones con respecto a ConsultRoom
 }

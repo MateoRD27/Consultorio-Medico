@@ -2,6 +2,7 @@ package edu.unimag.consultoriomedico.service.impl;
 
 import edu.unimag.consultoriomedico.dto.DoctorDTO;
 import edu.unimag.consultoriomedico.entity.Doctor;
+import edu.unimag.consultoriomedico.exception.ResourceNotFoundException;
 import edu.unimag.consultoriomedico.exception.UserAlreadyExistsException;
 import edu.unimag.consultoriomedico.mapper.DoctorMapper;
 import edu.unimag.consultoriomedico.repository.DoctorRepository;
@@ -21,12 +22,16 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public List<DoctorDTO> getAllDoctors() {
-        return List.of();
+        return doctorRepository.findAll().stream()
+                .map(doctorMapper::toDto)
+                .toList();
     }
 
     @Override
     public DoctorDTO getDoctorById(Long id) {
-        return null;
+        return doctorRepository.findById(id)
+                .map(doctorMapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + id));
     }
 
     @Override
@@ -41,11 +46,24 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Override
     public DoctorDTO updateDoctor(Long id, DoctorDTO doctorDto) {
-        return null;
+        Doctor existing = doctorRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + id));
+        existing.setFullName(doctorDto.getFullName());
+        existing.setIdentificationNumber(doctorDto.getIdentificationNumber());
+        existing.setSpecialty(doctorDto.getSpecialty());
+        existing.setEmail(doctorDto.getEmail());
+        existing.setAvailableFrom(doctorDto.getAvailableFrom());
+        existing.setAvailableTo(doctorDto.getAvailableTo());
+
+        return doctorMapper.toDto(doctorRepository.save(existing));
+
     }
 
     @Override
     public void deleteDoctor(Long id) {
-
+        if (!doctorRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Doctor not found with ID: " + id);
+        }
+        doctorRepository.deleteById(id);
     }
 }
