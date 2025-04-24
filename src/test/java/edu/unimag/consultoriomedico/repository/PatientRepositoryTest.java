@@ -1,5 +1,6 @@
 package edu.unimag.consultoriomedico.repository;
 
+import edu.unimag.consultoriomedico.entity.Doctor;
 import edu.unimag.consultoriomedico.entity.Patient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -85,4 +86,10 @@ class PatientRepositoryTest {
         assertFalse(patientRepository.findById(id).isPresent());
     }
 
+    @Test
+    void findByIdentificationNumber() {
+        Optional<Patient> result = patientRepository.findByIdentificationNumber(123456789L);
+        assertTrue(result.isPresent());
+        assertEquals("Javier Florez", result.get().getFullName());
+    }
 }

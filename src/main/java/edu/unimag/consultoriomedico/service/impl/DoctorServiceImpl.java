@@ -23,14 +23,14 @@ public class DoctorServiceImpl implements DoctorService {
     @Override
     public List<DoctorDTO> getAllDoctors() {
         return doctorRepository.findAll().stream()
-                .map(doctorMapper::toDto)
+                .map(doctorMapper::toDTO)
                 .toList();
     }
 
     @Override
     public DoctorDTO getDoctorById(Long id) {
         return doctorRepository.findById(id)
-                .map(doctorMapper::toDto)
+                .map(doctorMapper::toDTO)
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + id));
     }
 
@@ -41,7 +41,7 @@ public class DoctorServiceImpl implements DoctorService {
             throw new UserAlreadyExistsException("Doctor already exists with identification number: " + doctorDto.getIdentificationNumber());
         }
         Doctor doctor = doctorMapper.toEntity(doctorDto);
-        return doctorMapper.toDto(doctorRepository.save(doctor));
+        return doctorMapper.toDTO(doctorRepository.save(doctor));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class DoctorServiceImpl implements DoctorService {
         existing.setAvailableFrom(doctorDto.getAvailableFrom());
         existing.setAvailableTo(doctorDto.getAvailableTo());
 
-        return doctorMapper.toDto(doctorRepository.save(existing));
+        return doctorMapper.toDTO(doctorRepository.save(existing));
 
     }
 
