@@ -16,6 +16,9 @@ import edu.unimag.consultoriomedico.service.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static java.util.Locale.filter;
 
 
 @Service
@@ -85,7 +88,39 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDTO updateAppointment(Long id, AppointmentDTO appointmentDTO) {
+        //obtener la cita por id y verfiar que exista
+        Appointment existingAppointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with ID: " + id));
 
+        //obtener el doctor y verificar que exista
+        Doctor doctor = doctorRepository.findById( appointmentDTO.getDoctorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + appointmentDTO.getDoctorId()));
+        //obtener el paciente y verificar que exista
+        Patient patient = patientRepository.findById( appointmentDTO.getPatientId())
+                .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + appointmentDTO.getPatientId()));
+        //obtener el consultorio y verificar que exista
+        ConsultRoom consultRoom = consultRoomRepository.findById( appointmentDTO.getConsultRoomId())
+                .orElseThrow(() -> new ResourceNotFoundException("Consult room not found with ID: " + appointmentDTO.getConsultRoomId()));
+
+        //verificar si la cita tiene coflicto con otra
+        List<Appointment> conflicts = appointmentRepository.findConflictsAppointment(doctor.getId(), consultRoom.getId(), appointmentDTO.getStartTime(), appointmentDTO.getEndTime())
+                .stream()
+                .filter(a -> !a.getId().equals(id)) // Excluir la cita actual
+                .toList();
+
+        if (!conflicts.isEmpty()) {
+            throw new ConflictException( "DoctorOrRoom", "already has an appointment in the same date and time");
+        }
+
+        existingAppointment.setDoctor(doctor);
+        existingAppointment.setPatient(patient);
+        existingAppointment.setConsultRoom(consultRoom);
+        existingAppointment.setStatus(appointmentDTO.getStatus());
+        existingAppointment.setStartTime(appointmentDTO.getStartTime());
+        existingAppointment.setEndTime(appointmentDTO.getEndTime());
+        //guardar la cita
+
+        return appointmentMapper.toDTO(appointmentRepository.save(existingAppointment));
     }
 
     @Override
