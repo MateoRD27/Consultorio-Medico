@@ -114,10 +114,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    //excepciones con respecto a pacientes
 
-
-    //excepciones con respecto a citas
 
     // Maneja la excepción cuando dos citas tienen el mismo horario
     @ExceptionHandler(AppointmentTimeConflictException.class)
@@ -147,9 +144,6 @@ public class GlobalExceptionHandler {
 
 
 
-    //excepciones con respecto a MedicalRecords
-
-    //excepciones con respecto a ConsultRoom
     //maneja la excepcion cuando pida todos los consultorios
     @ExceptionHandler(NoDataFoundException.class)
     public ResponseEntity<ApiError> handleNoDataFound(NoDataFoundException ex) {
@@ -161,5 +155,19 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    // en conflicto las citas o los doctres o la habitacion
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Map< String, Object>> handleConflictException(ConflictException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("timestamp", LocalDateTime.now());
+        response.put("status", HttpStatus.CONFLICT.value());
+        response.put("message", ex.getMessage());
+        response.put("conflictField", ex.getConflictField());
+        response.put("error", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(response);
     }
 }
