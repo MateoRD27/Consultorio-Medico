@@ -78,16 +78,21 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public AppointmentDTO getAppointmentById(Long id) {
-        return null;
+        return appointmentRepository.findById(id)
+                .map(appointmentMapper::toDTO)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found with ID: " + id));
     }
 
     @Override
     public AppointmentDTO updateAppointment(Long id, AppointmentDTO appointmentDTO) {
-        return null;
+
     }
 
     @Override
     public void deleteAppointment(Long id) {
-
+        if (!appointmentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Appointment not found with ID: " + id);
+        }
+        appointmentRepository.deleteById(id);
     }
 }
