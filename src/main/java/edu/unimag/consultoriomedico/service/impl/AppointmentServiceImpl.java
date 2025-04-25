@@ -38,6 +38,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO) {
         Doctor doctor = this.doctorRepository.findById(appointmentDTO.getDoctorId())
                 .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with ID: " + appointmentDTO.getDoctorId()));
+
+
+
         Patient patient = this.patientRepository.findById(appointmentDTO.getPatientId())
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with ID: " + appointmentDTO.getPatientId()));
         //verificar si el consultorio existe
@@ -57,6 +60,11 @@ public class AppointmentServiceImpl implements AppointmentService {
         // verificar que no hayan citas en conflicto
         if (!this.appointmentRepository.findConflictsAppointment(doctor.getId(), consultRoom.getId(), appointmentDTO.getStartTime(), appointmentDTO.getEndTime()).isEmpty()) {
             throw new ConflictException( "DoctorOrRoom", "already has an appointment in the same date and time");
+        }
+
+        //verificar que el doctor trabaje en el horario de la cita, el horario de la cita debe estar dentro del intervalo de horario de trabajo del doctor
+        if (appointmentDTO.getStartTime().toLocalTime().isBefore(doctor.getAvailableFrom()) || appointmentDTO.getEndTime().toLocalTime().isAfter(doctor.getAvailableTo())) {
+            throw new ConflictException( "Doctor", "is not available in the selected time");
         }
 
         //crear la cita
@@ -111,6 +119,12 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!conflicts.isEmpty()) {
             throw new ConflictException( "DoctorOrRoom", "already has an appointment in the same date and time");
         }
+
+        //verificar que el doctor trabaje en el horario de la cita, el horario de la cita debe estar dentro del intervalo de horario de trabajo del doctor
+        if (appointmentDTO.getStartTime().toLocalTime().isBefore(doctor.getAvailableFrom()) || appointmentDTO.getEndTime().toLocalTime().isAfter(doctor.getAvailableTo())) {
+            throw new ConflictException( "Doctor", "is not available in the selected time");
+        }
+
 
         existingAppointment.setDoctor(doctor);
         existingAppointment.setPatient(patient);
