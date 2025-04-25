@@ -26,6 +26,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
+    // Maneja la excepción cuando se intenta agregar una historia clínica a una cita no finalizada
+    @ExceptionHandler(AppointmentNotCompletedException.class)
+    public ResponseEntity<ApiError> handleAppointmentNotCompleted(AppointmentNotCompletedException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.BAD_REQUEST.value())  // Código HTTP 400 - Solicitud incorrecta
+                .message(ex.getMessage())
+                .errors(null)
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     // Maneja las excepciones lanzadas cuando fallan las validaciones de los datos de entrada (por ejemplo, @NotNull, @Email, etc.)
     // Devuelve un error 400 (BAD REQUEST) con el mensaje de la excepción.
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -131,6 +144,8 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
+
 
     //excepciones con respecto a MedicalRecords
 

@@ -35,12 +35,25 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public List<DoctorDTO> getDoctorsBySpecialty(String specialty) {
+        List<DoctorDTO> listDoctor = doctorRepository.findBySpecialty(specialty).stream()
+                .map(doctorMapper::toDTO)
+                .toList();
+        if(listDoctor.isEmpty()) {
+            throw new ResourceNotFoundException("Doctors not found with special type: " + specialty);
+        }
+        return listDoctor;
+    }
+
+    @Override
     public DoctorDTO createDoctor(DoctorDTO doctorDto) {
         //verificar si el doctor ya existe
         if(doctorRepository.findByIdentificationNumber(doctorDto.getIdentificationNumber()).isPresent()) {
             throw new UserAlreadyExistsException("Doctor already exists with identification number: " + doctorDto.getIdentificationNumber());
         }
+        // Mapear DTO a entidad
         Doctor doctor = doctorMapper.toEntity(doctorDto);
+        // Guardar doctor y como dto
         return doctorMapper.toDTO(doctorRepository.save(doctor));
     }
 
@@ -67,14 +80,5 @@ public class DoctorServiceImpl implements DoctorService {
         doctorRepository.deleteById(id);
     }
 
-    @Override
-    public List<DoctorDTO> getDoctorsBySpecialty(String specialty) {
-        List<DoctorDTO> listDoctor = doctorRepository.findBySpecialty(specialty).stream()
-                .map(doctorMapper::toDTO)
-                .toList();
-        if(listDoctor.isEmpty()) {
-            throw new ResourceNotFoundException("Doctors not found with special type: " + specialty);
-        }
-        return listDoctor;
-    }
+
 }

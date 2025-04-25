@@ -1,34 +1,76 @@
 package edu.unimag.consultoriomedico.service.impl;
 
 import edu.unimag.consultoriomedico.dto.MedicalRecordDTO;
+import edu.unimag.consultoriomedico.entity.Appointment;
+import edu.unimag.consultoriomedico.entity.MedicalRecord;
+import edu.unimag.consultoriomedico.entity.Status;
+import edu.unimag.consultoriomedico.exception.AppointmentNotCompletedException;
+import edu.unimag.consultoriomedico.exception.ResourceNotFoundException;
+import edu.unimag.consultoriomedico.mapper.MedicalRecordMapper;
+import edu.unimag.consultoriomedico.repository.AppointmentRepository;
+import edu.unimag.consultoriomedico.repository.MedicalRecordRepository;
 import edu.unimag.consultoriomedico.service.MedicalRecordsService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class MedicalRecordsServiceImpl implements MedicalRecordsService {
+    private  final MedicalRecordRepository medicalRecordRepository;
+    private  final MedicalRecordMapper medicalRecordMapper;
+    private  final AppointmentRepository appointmentRepository;
 
     @Override
     public List<MedicalRecordDTO> getAllMedicalRecords() {
-        return List.of();
+        List<MedicalRecordDTO> listMedicalRecords= medicalRecordRepository.findAll().stream().map(medicalRecordMapper::toDTO).toList();
+        if(listMedicalRecords.isEmpty()){
+            throw new ResourceNotFoundException("Medical Records not found ");
+        }
+        return listMedicalRecords;
     }
 
     @Override
     public MedicalRecordDTO getMedicalRecordById(Long id) {
-        return null;
+        return medicalRecordRepository.findById(id)
+                .map(medicalRecordMapper::toDTO)
+                .orElseThrow(()->new ResourceNotFoundException("Medical Records not found"));
     }
 
     @Override
     public List<MedicalRecordDTO> getMedicalRecordsByPatientId(Long id) {
-        return List.of();
+        List<MedicalRecordDTO> listMedicalRecordsPatient = medicalRecordRepository.findByPatientId(id).stream()
+                .map(medicalRecordMapper::toDTO).toList();
+
+        if(listMedicalRecordsPatient.isEmpty()){
+            throw new ResourceNotFoundException("Medical Records not found ");
+        }
+        return listMedicalRecordsPatient;
     }
 
     @Override
     public MedicalRecordDTO createMedicalRecord(MedicalRecordDTO medicalRecordDTO) {
-        return null;
+        Appointment appointment = appointmentRepository.findById(medicalRecordDTO.getAppointmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("appointment not found witch ID: " + medicalRecordDTO.getAppointmentId()));
+
+        if (appointment.getStatus() != Status.COMPLETED) {
+            throw new AppointmentNotCompletedException("Cannot create medical record: appointment with ID " + medicalRecordDTO.getAppointmentId() + " has not been completed.");
+        }
+
+        // Mapear DTO a entidad
+        MedicalRecord medicalRecord = medicalRecordMapper.toEntity(medicalRecordDTO);
+        medicalRecord.setAppointment(appointment);
+
+        // Guardar historial médico Devolver como DTO
+        return medicalRecordMapper.toDTO(medicalRecordRepository.save(medicalRecord));
     }
 
     @Override
     public void deleteMedicalRecord(Long id) {
-
+        if (!medicalRecordRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Medical Record not found with ID: " + id);
+        }
+        medicalRecordRepository.deleteById(id);
     }
 }

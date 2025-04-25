@@ -6,10 +6,14 @@ import edu.unimag.consultoriomedico.exception.NoDataFoundException;
 import edu.unimag.consultoriomedico.mapper.ConsultRoomMapper;
 import edu.unimag.consultoriomedico.repository.ConsultRoomRepository;
 import edu.unimag.consultoriomedico.service.ConsultRoomService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
+@RequiredArgsConstructor
 public class ConsultRoomServiceImpl implements ConsultRoomService {
 
     ConsultRoomRepository consultRoomRepository;

@@ -7,13 +7,17 @@ import edu.unimag.consultoriomedico.exception.UserAlreadyExistsException;
 import edu.unimag.consultoriomedico.mapper.PatientMapper;
 import edu.unimag.consultoriomedico.repository.PatientRepository;
 import edu.unimag.consultoriomedico.service.PatientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class PatientServiceImpl implements PatientService {
 
-    PatientRepository patientRepository;
-    PatientMapper patientMapper;
+    private  final PatientRepository patientRepository;
+    private  final PatientMapper patientMapper;
 
     //obtener todos los paciente
     @Override
@@ -27,7 +31,8 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public PatientDTO getPatientById(Long id) {
         return patientRepository.findById(id)
-                .map(patientMapper::toDTO).orElseThrow(()->new ResourceNotFoundException("Patient not found"));
+                .map(patientMapper::toDTO)
+                .orElseThrow(()->new ResourceNotFoundException("Patient not found"));
     }
 
     //Crear un nuevo paciente
