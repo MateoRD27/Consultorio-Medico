@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ConsultRoomServiceImpl implements ConsultRoomService {
 
-    ConsultRoomRepository consultRoomRepository;
-    ConsultRoomMapper consultRoomMapper;
+    private final ConsultRoomRepository consultRoomRepository;
+    private final ConsultRoomMapper consultRoomMapper;
 
     // obtener todos los consultorios
     @Override

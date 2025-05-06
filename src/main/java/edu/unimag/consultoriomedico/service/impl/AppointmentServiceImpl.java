@@ -18,18 +18,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.util.Locale.filter;
-
 
 @Service
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
 
-    AppointmentRepository appointmentRepository;
-    DoctorRepository doctorRepository;
-    PatientRepository patientRepository;
-    ConsultRoomRepository consultRoomRepository;
-    AppointmentMapper appointmentMapper;
+    private final AppointmentRepository appointmentRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
+    private final ConsultRoomRepository consultRoomRepository;
+    private final AppointmentMapper appointmentMapper;
 
 
 
@@ -69,12 +67,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         //crear la cita
         Appointment appointment = appointmentMapper.toEntity(appointmentDTO);
-        appointment.setDoctor(doctor);
         appointment.setPatient(patient);
         appointment.setConsultRoom(consultRoom);
         appointment.setStatus(appointmentDTO.getStatus());
         appointment.setStartTime(appointmentDTO.getStartTime());
         appointment.setEndTime(appointmentDTO.getEndTime());
+        appointment.setDoctor(doctor);
         //guardar la cita
         return appointmentMapper.toDTO(appointmentRepository.save(appointment));
 
