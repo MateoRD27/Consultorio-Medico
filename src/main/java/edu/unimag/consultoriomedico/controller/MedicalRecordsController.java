@@ -11,29 +11,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/medical-records")
+@RequestMapping("/api/records")
 @RequiredArgsConstructor
 
 public class MedicalRecordsController {
     private final MedicalRecordsService medicalRecordsService;
 
+    @PostMapping
+    public ResponseEntity<MedicalRecordDTO> createMedicalRecord(@Valid @RequestBody MedicalRecordDTO medicalRecordDTO) {
+        return ResponseEntity.status( HttpStatus.CREATED).body(medicalRecordsService.createMedicalRecord(medicalRecordDTO));
+    }
+
+    @GetMapping
     public ResponseEntity<List<MedicalRecordDTO>> getAllMedicalRecords() {
         return ResponseEntity.ok(medicalRecordsService.getAllMedicalRecords());
     }
 
+    @GetMapping("/{id}")
     public ResponseEntity<MedicalRecordDTO> getMedicalRecordById(@PathVariable Long id) {
         return ResponseEntity.ok(medicalRecordsService.getMedicalRecordById(id));
     }
 
-    public ResponseEntity<List<MedicalRecordDTO>> getMedicalRecordsByPatientId(@PathVariable Long id) {
-        return ResponseEntity.ok(medicalRecordsService.getMedicalRecordsByPatientId(id));
+    @GetMapping("/patient/{patientId}")
+    public ResponseEntity<List<MedicalRecordDTO>> getMedicalRecordsByPatientId(@PathVariable Long patientId) {
+        return ResponseEntity.ok(medicalRecordsService.getMedicalRecordsByPatientId(patientId));
     }
 
-    public ResponseEntity<MedicalRecordDTO> createMedicalRecord(@Valid @RequestBody MedicalRecordDTO medicalRecordDTO) {
-        return ResponseEntity.status( HttpStatus.CREATED).body(medicalRecordsService.createMedicalRecord(medicalRecordDTO));
-    }
     //delete medical records
-    @DeleteMapping
+    @DeleteMapping({"/{id}"})
     public ResponseEntity<Void> deleteMedicalRecord(@PathVariable Long id) {
         medicalRecordsService.deleteMedicalRecord(id);
         return ResponseEntity.noContent().build();

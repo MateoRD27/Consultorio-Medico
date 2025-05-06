@@ -18,22 +18,23 @@ public class ConsultRoomController
 {
     ConsultRoomService consultRoomService;
 
-    @GetMapping
-    public ResponseEntity<List<ConsultRoomDTO>> getAllConsultRooms() {
-        return ResponseEntity.ok(consultRoomService.getAllConsultRooms());
-    }
-
-    @GetMapping
-    public ResponseEntity<ConsultRoomDTO> getConsultRoomById(Long id) {
-        return ResponseEntity.ok(consultRoomService.getConsultRoomById(id));
-    }
-
     @PostMapping
     public ResponseEntity<ConsultRoomDTO> createConsultRoom(ConsultRoomDTO consultRoomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(consultRoomService.createConsultRoom(consultRoomDto));
     }
 
-    @PutMapping
+    @GetMapping
+    public ResponseEntity<List<ConsultRoomDTO>> getAllConsultRooms() {
+        return ResponseEntity.ok(consultRoomService.getAllConsultRooms());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ConsultRoomDTO> getConsultRoomById(@PathVariable Long id) {
+        return ResponseEntity.ok(consultRoomService.getConsultRoomById(id));
+    }
+
+
+    @PutMapping("/{id}")
     public ResponseEntity<ConsultRoomDTO> updateConsultRoom(@PathVariable Long id, @Valid @RequestBody ConsultRoomDTO consultRoomDto) {
         return ResponseEntity.ok(consultRoomService.updateConsultRoom(id, consultRoomDto));
     }

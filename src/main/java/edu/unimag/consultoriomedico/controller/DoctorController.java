@@ -16,6 +16,11 @@ import java.util.List;
 public class DoctorController {
     private final DoctorService doctorService;
 
+    @PostMapping
+    public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO doctorDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(doctorService.createDoctor(doctorDto));
+    }
+
     @GetMapping
     public ResponseEntity<List<DoctorDTO>> getAllDoctors() {
         return ResponseEntity.ok(doctorService.getAllDoctors());
@@ -26,22 +31,18 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
-    @GetMapping
+    @GetMapping("/{specialty}")
     ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialty(@PathVariable String specialty) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialty));
     }
 
-    @PostMapping
-    public ResponseEntity<DoctorDTO> createDoctor(@Valid @RequestBody DoctorDTO doctorDto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(doctorService.createDoctor(doctorDto));
-    }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public ResponseEntity<DoctorDTO> updateDoctor(@PathVariable Long id, @Valid @RequestBody DoctorDTO doctorDto) {
         return ResponseEntity.ok(doctorService.updateDoctor(id, doctorDto));
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable Long id) {
         doctorService.deleteDoctor(id);
         return ResponseEntity.noContent().build();
