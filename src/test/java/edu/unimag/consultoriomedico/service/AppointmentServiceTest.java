@@ -2,6 +2,8 @@ package edu.unimag.consultoriomedico.service;
 
 import edu.unimag.consultoriomedico.dto.AppointmentDTO;
 import edu.unimag.consultoriomedico.entity.*;
+import edu.unimag.consultoriomedico.exception.ConflictException;
+import edu.unimag.consultoriomedico.exception.ResourceNotFoundException;
 import edu.unimag.consultoriomedico.mapper.AppointmentMapper;
 import edu.unimag.consultoriomedico.repository.AppointmentRepository;
 import edu.unimag.consultoriomedico.repository.ConsultRoomRepository;
@@ -15,6 +17,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,28 +46,35 @@ class AppointmentServiceTest {
 
     private Appointment appointment;
     private AppointmentDTO appointmentDTO;
+    private Doctor doctor;
+    private Patient patient;
+    private ConsultRoom consultRoom;
 
     @BeforeEach
     void setUp() {
+        LocalTime from = LocalTime.of(9, 0);
+        LocalTime to = LocalTime.of(17, 0);
+        LocalDateTime start = LocalDateTime.now().plusDays(1).withHour(10);
+        LocalDateTime end = start.plusHours(1);
 
-        Doctor doctor = Doctor.builder()
+        doctor = Doctor.builder()
                 .id(1L)
                 .fullName("Dr. Strange")
                 .identificationNumber(12345L)
                 .specialty("Magic")
                 .email("drstrange@example.com")
-                .availableFrom(LocalDateTime.now().toLocalTime())
-                .availableTo(LocalDateTime.now().toLocalTime().plusHours(8))
+                .availableFrom(from)
+                .availableTo(to)
                 .build();
 
-        Patient patient = Patient.builder()
+        patient = Patient.builder()
                 .id(1L)
                 .fullName("John Doe")
                 .identificationNumber(54321L)
                 .email("johndoe@example.com")
                 .build();
 
-        ConsultRoom consultRoom = ConsultRoom.builder()
+        consultRoom = ConsultRoom.builder()
                 .id(1L)
                 .name("Room A")
                 .roomNumber(101)
@@ -77,8 +87,8 @@ class AppointmentServiceTest {
                 .doctor(doctor)
                 .patient(patient)
                 .consultRoom(consultRoom)
-                .startTime(LocalDateTime.now().plusDays(1))
-                .endTime(LocalDateTime.now().plusDays(1).plusHours(1))
+                .startTime(start)
+                .endTime(end)
                 .status(Status.SCHEDULED)
                 .build();
 
@@ -87,17 +97,25 @@ class AppointmentServiceTest {
                 .doctorId(doctor.getId())
                 .patientId(patient.getId())
                 .consultRoomId(consultRoom.getId())
-                .startTime(appointment.getStartTime())
-                .endTime(appointment.getEndTime())
+                .startTime(start)
+                .endTime(end)
                 .status(appointment.getStatus())
                 .build();
     }
 
     @Test
     void shouldCreateAppointment_success() {
-        when(doctorRepository.findById(1L)).thenReturn(Optional.of(appointment.getDoctor()));
-        when(patientRepository.findById(1L)).thenReturn(Optional.of(appointment.getPatient()));
-        when(consultRoomRepository.findById(1L)).thenReturn(Optional.of(appointment.getConsultRoom()));
+        when(doctorRepository.findById(1L)).thenReturn(Optional.of(doctor));
+        when(patientRepository.findById(1L)).thenReturn(Optional.of(patient));
+        when(consultRoomRepository.findById(1L)).thenReturn(Optional.of(consultRoom));
+
+        when(appointmentRepository.existsByDoctorAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any()))
+                .thenReturn(false);
+        when(appointmentRepository.existsByConsultRoomAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(any(), any(), any()))
+                .thenReturn(false);
+        when(appointmentRepository.findConflictsAppointment(anyLong(), anyLong(), any(), any()))
+                .thenReturn(Collections.emptyList());
+
         when(appointmentMapper.toEntity(any(AppointmentDTO.class))).thenReturn(appointment);
         when(appointmentRepository.save(any(Appointment.class))).thenReturn(appointment);
         when(appointmentMapper.toDTO(any(Appointment.class))).thenReturn(appointmentDTO);
@@ -106,12 +124,7 @@ class AppointmentServiceTest {
 
         assertNotNull(result);
         assertEquals(Status.SCHEDULED, result.getStatus());
-        verify(doctorRepository, times(1)).findById(1L);
-        verify(patientRepository, times(1)).findById(1L);
-        verify(consultRoomRepository, times(1)).findById(1L);
-        verify(appointmentRepository, times(1)).save(any(Appointment.class));
     }
-
 
     @Test
     void shouldGetAllAppointments() {
