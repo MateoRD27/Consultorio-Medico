@@ -94,7 +94,7 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void createAppointment_success() {
+    void shouldCreateAppointment_success() {
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(appointment.getDoctor()));
         when(patientRepository.findById(1L)).thenReturn(Optional.of(appointment.getPatient()));
         when(consultRoomRepository.findById(1L)).thenReturn(Optional.of(appointment.getConsultRoom()));
@@ -114,7 +114,7 @@ class AppointmentServiceTest {
 
 
     @Test
-    void getAllAppointments() {
+    void shouldGetAllAppointments() {
         List<Appointment> appointments = List.of(appointment);
         when(appointmentRepository.findAll()).thenReturn(appointments);
         when(appointmentMapper.toDTO(any(Appointment.class))).thenReturn(appointmentDTO);
@@ -126,7 +126,7 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void getAppointmentById() {
+    void shouldGetAppointmentById() {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(appointmentMapper.toDTO(any(Appointment.class))).thenReturn(appointmentDTO);
 
@@ -138,7 +138,7 @@ class AppointmentServiceTest {
     }
 
     @Test
-    void updateAppointment() {
+    void shouldUpdateAppointment() {
         when(appointmentRepository.findById(1L)).thenReturn(Optional.of(appointment));
         when(doctorRepository.findById(1L)).thenReturn(Optional.of(appointment.getDoctor()));
         when(patientRepository.findById(1L)).thenReturn(Optional.of(appointment.getPatient()));
@@ -160,7 +160,7 @@ class AppointmentServiceTest {
 
 
     @Test
-    void deleteAppointment() {
+    void shouldDeleteAppointment() {
         when(appointmentRepository.existsById(1L)).thenReturn(true);
 
         appointmentService.deleteAppointment(1L);
