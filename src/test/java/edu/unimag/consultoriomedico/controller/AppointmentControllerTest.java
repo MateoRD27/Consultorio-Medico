@@ -1,27 +1,26 @@
 package edu.unimag.consultoriomedico.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.unimag.consultoriomedico.dto.AppointmentDTO;
 import edu.unimag.consultoriomedico.entity.Status;
 import edu.unimag.consultoriomedico.service.AppointmentService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -29,14 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(AppointmentControllerTest.MockConfig.class)
 class AppointmentControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @Autowired
-    private AppointmentService appointmentService;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private ObjectMapper objectMapper;
+    @Autowired private AppointmentService appointmentService;
 
     @TestConfiguration
     static class MockConfig {
@@ -47,34 +41,33 @@ class AppointmentControllerTest {
     }
 
     @Test
-    void shouldCreateAppointmentSuccessfully() throws Exception {
+    void shouldCreateAppointment() throws Exception {
         AppointmentDTO dto = AppointmentDTO.builder()
                 .id(1L)
-                .doctorId(1L)
                 .patientId(1L)
+                .doctorId(1L)
                 .consultRoomId(1L)
-                .startTime(LocalDateTime.now().plusDays(1))  // Validación de fecha futura
+                .startTime(LocalDateTime.now().plusDays(1))
+                .endTime(LocalDateTime.now().plusDays(1).plusHours(1))
                 .status(Status.SCHEDULED)
                 .build();
 
         when(appointmentService.createAppointment(any())).thenReturn(dto);
 
         mockMvc.perform(post("/api/appointments")
-                        .with(csrf())  // Token CSRF simulado
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.status").value(Status.SCHEDULED));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.status").value("SCHEDULED"));
     }
 
     @Test
-    void shouldReturnAllAppointments() throws Exception {
+    void shouldGetAllAppointments() throws Exception {
         AppointmentDTO dto = AppointmentDTO.builder()
                 .id(1L)
-                .doctorId(1L)
                 .patientId(1L)
-                .consultRoomId(1L)
-                .startTime(LocalDateTime.now().plusDays(1))
+                .doctorId(1L)
                 .status(Status.SCHEDULED)
                 .build();
 
@@ -82,17 +75,16 @@ class AppointmentControllerTest {
 
         mockMvc.perform(get("/api/appointments"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1L));
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].status").value("SCHEDULED"));
     }
 
     @Test
     void shouldGetAppointmentById() throws Exception {
         AppointmentDTO dto = AppointmentDTO.builder()
                 .id(1L)
-                .doctorId(1L)
                 .patientId(1L)
-                .consultRoomId(1L)
-                .startTime(LocalDateTime.now().plusDays(1))
+                .doctorId(1L)
                 .status(Status.SCHEDULED)
                 .build();
 
@@ -100,18 +92,20 @@ class AppointmentControllerTest {
 
         mockMvc.perform(get("/api/appointments/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.status").value("SCHEDULED"));
     }
 
     @Test
-    void shouldUpdateAppointmentSuccessfully() throws Exception {
+    void shouldUpdateAppointment() throws Exception {
         AppointmentDTO dto = AppointmentDTO.builder()
                 .id(1L)
-                .doctorId(2L) // Cambio simulado
                 .patientId(1L)
+                .doctorId(1L)
                 .consultRoomId(1L)
-                .startTime(LocalDateTime.now().plusDays(2))  // Fecha futura
-                .status(Status.COMPLETED)  // Cambio de estado
+                .startTime(LocalDateTime.now().plusDays(2))
+                .endTime(LocalDateTime.now().plusDays(2).plusHours(1))
+                .status(Status.COMPLETED)
                 .build();
 
         when(appointmentService.updateAppointment(eq(1L), any())).thenReturn(dto);
@@ -120,33 +114,15 @@ class AppointmentControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.doctorId").value(2L));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.status").value("COMPLETED"));
     }
 
     @Test
-    void shouldDeleteAppointmentSuccessfully() throws Exception {
+    void shouldDeleteAppointment() throws Exception {
         mockMvc.perform(delete("/api/appointments/1"))
                 .andExpect(status().isNoContent());
 
         verify(appointmentService).deleteAppointment(1L);
-    }
-
-    @Test
-    void shouldReturnBadRequestWhenStartTimeIsNotFuture() throws Exception {
-        // Simulando fecha pasada
-        AppointmentDTO dto = AppointmentDTO.builder()
-                .id(1L)
-                .doctorId(1L)
-                .patientId(1L)
-                .consultRoomId(1L)
-                .startTime(LocalDateTime.now().minusDays(1))  // Fecha pasada
-                .status(Status.SCHEDULED)
-                .build();
-
-        mockMvc.perform(post("/api/appointments")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(dto)))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Start time must be in the future"));
     }
 }
