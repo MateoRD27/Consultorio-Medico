@@ -2,7 +2,7 @@ package edu.unimag.consultoriomedico.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.unimag.consultoriomedico.dto.AppointmentDTO;
-import edu.unimag.consultoriomedico.entity.Status;
+import edu.unimag.consultoriomedico.enums.Status;
 import edu.unimag.consultoriomedico.service.AppointmentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

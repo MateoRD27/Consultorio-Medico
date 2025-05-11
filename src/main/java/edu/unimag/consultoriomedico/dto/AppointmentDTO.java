@@ -1,7 +1,6 @@
 package edu.unimag.consultoriomedico.dto;
 
-import edu.unimag.consultoriomedico.entity.*;
-import jakarta.persistence.*;
+import edu.unimag.consultoriomedico.enums.Status;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

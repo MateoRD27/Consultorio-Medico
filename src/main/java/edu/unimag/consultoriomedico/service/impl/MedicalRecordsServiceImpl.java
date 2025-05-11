@@ -4,7 +4,7 @@ import edu.unimag.consultoriomedico.dto.MedicalRecordDTO;
 import edu.unimag.consultoriomedico.entity.Appointment;
 import edu.unimag.consultoriomedico.entity.MedicalRecord;
 import edu.unimag.consultoriomedico.entity.Patient;
-import edu.unimag.consultoriomedico.entity.Status;
+import edu.unimag.consultoriomedico.enums.Status;
 import edu.unimag.consultoriomedico.exception.AppointmentNotCompletedException;
 import edu.unimag.consultoriomedico.exception.ResourceNotFoundException;
 import edu.unimag.consultoriomedico.mapper.MedicalRecordMapper;

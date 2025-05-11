@@ -2,8 +2,7 @@ package edu.unimag.consultoriomedico.service;
 
 import edu.unimag.consultoriomedico.dto.AppointmentDTO;
 import edu.unimag.consultoriomedico.entity.*;
-import edu.unimag.consultoriomedico.exception.ConflictException;
-import edu.unimag.consultoriomedico.exception.ResourceNotFoundException;
+import edu.unimag.consultoriomedico.enums.Status;
 import edu.unimag.consultoriomedico.mapper.AppointmentMapper;
 import edu.unimag.consultoriomedico.repository.AppointmentRepository;
 import edu.unimag.consultoriomedico.repository.ConsultRoomRepository;

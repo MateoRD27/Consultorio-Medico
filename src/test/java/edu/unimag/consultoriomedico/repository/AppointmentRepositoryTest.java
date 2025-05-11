@@ -1,6 +1,7 @@
 package edu.unimag.consultoriomedico.repository;
 
 import edu.unimag.consultoriomedico.entity.*;
+import edu.unimag.consultoriomedico.enums.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package edu.unimag.consultoriomedico.entity;
+package edu.unimag.consultoriomedico.enums;
 
 /**
  * Enum que representa los posibles estados de una cita.

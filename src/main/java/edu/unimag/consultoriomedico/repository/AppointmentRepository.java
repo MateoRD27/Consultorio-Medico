@@ -1,7 +1,7 @@
 package edu.unimag.consultoriomedico.repository;
 
 import edu.unimag.consultoriomedico.entity.Appointment;
-import edu.unimag.consultoriomedico.entity.Status;
+import edu.unimag.consultoriomedico.enums.Status;
 import edu.unimag.consultoriomedico.entity.ConsultRoom;
 import edu.unimag.consultoriomedico.entity.Doctor;
 import org.springframework.data.jpa.repository.JpaRepository;

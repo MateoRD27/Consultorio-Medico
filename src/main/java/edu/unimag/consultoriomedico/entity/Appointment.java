@@ -1,4 +1,5 @@
 package edu.unimag.consultoriomedico.entity;
+import edu.unimag.consultoriomedico.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
