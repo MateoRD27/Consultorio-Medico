@@ -1,4 +1,4 @@
-package edu.unimag.consultoriomedico.security.jwt;
+package edu.unimag.consultoriomedico.security.jwt.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
