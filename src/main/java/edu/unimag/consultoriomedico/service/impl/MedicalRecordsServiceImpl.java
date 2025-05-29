@@ -27,10 +27,12 @@ public class MedicalRecordsServiceImpl implements MedicalRecordsService {
 
     @Override
     public List<MedicalRecordDTO> getAllMedicalRecords() {
+        System.out.println("GET /api/records endpoint llamado!");
         List<MedicalRecordDTO> listMedicalRecords= medicalRecordRepository.findAll().stream().map(medicalRecordMapper::toDTO).toList();
         if(listMedicalRecords.isEmpty()){
             throw new ResourceNotFoundException("Medical Records not found ");
         }
+        System.out.println("Devolviendo " + listMedicalRecords.size() + " registros");
         return listMedicalRecords;
     }
 

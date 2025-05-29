@@ -1,4 +1,4 @@
-package edu.unimag.consultoriomedico.security.jwt.exception;
+package edu.unimag.consultoriomedico.security.jwt;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +18,10 @@ public class JwtEntryPoint implements AuthenticationEntryPoint {
     private static final Logger logger = LoggerFactory.getLogger(JwtEntryPoint.class);
 
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+                         AuthenticationException authException) throws IOException, ServletException {
         logger.error("Unauthorized error: {}", authException.getMessage());
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Error: Unauthorized");
+
     }
 }

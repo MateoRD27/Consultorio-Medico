@@ -7,10 +7,11 @@ import edu.unimag.consultoriomedico.dto.SignupRequest;
 import edu.unimag.consultoriomedico.entity.Role;
 import edu.unimag.consultoriomedico.entity.User;
 import edu.unimag.consultoriomedico.enums.ERole;
+import edu.unimag.consultoriomedico.exception.UserAlreadyExistsException;
 import edu.unimag.consultoriomedico.repository.RoleRepository;
 import edu.unimag.consultoriomedico.repository.UserRepository;
 import edu.unimag.consultoriomedico.security.jwt.JwtUtil;
-import edu.unimag.consultoriomedico.security.services.UserDetailsImpl;
+import edu.unimag.consultoriomedico.security.services.UserInfoDetails;
 import edu.unimag.consultoriomedico.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -47,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtil.generateToken(authentication.getName());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        UserInfoDetails userDetails = (UserInfoDetails) authentication.getPrincipal();
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
@@ -58,11 +59,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public MessageResponse registerUser(SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            throw new RuntimeException("Error: Username is already taken!");
+            throw new UserAlreadyExistsException("Error: Username ya existe");
         }
 
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            throw new RuntimeException("Error: Email is already in use!");
+            throw new UserAlreadyExistsException("Error: Email is already in use!");
         }
 
         User user = new User(
@@ -71,7 +72,7 @@ public class AuthServiceImpl implements AuthService {
                 encoder.encode(signUpRequest.getPassword())
         );
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {

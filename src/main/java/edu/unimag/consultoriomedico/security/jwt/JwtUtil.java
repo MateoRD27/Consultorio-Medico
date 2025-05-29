@@ -17,11 +17,14 @@ public class JwtUtil {
     private final SecretKey key;
     private final long expiration;
 
-    public JwtUtil(@Value("${jwt.secretKey}") String secretKey,
-                   @Value("${jwt.expiration}") long expiration) {
+    public JwtUtil(
+            @Value("${jwt.secretKey}") String secretKey,
+            @Value("${jwt.expiration}") long expiration) {
         this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
         this.expiration = expiration;
     }
+
+
     public String generateToken(String username){
         return Jwts.builder()
                 .subject(username)

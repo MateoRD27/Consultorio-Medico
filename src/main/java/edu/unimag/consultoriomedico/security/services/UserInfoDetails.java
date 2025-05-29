@@ -1,42 +1,35 @@
 package edu.unimag.consultoriomedico.security.services;
 
 import edu.unimag.consultoriomedico.entity.User;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class UserDetailsImpl implements UserDetails {
+@Getter
+public class UserInfoDetails implements UserDetails {
     private final Long id;
     private final String username;
     private final String password;
     private final String email;
     private final Set<GrantedAuthority> authorities;
-    public UserDetailsImpl(User user){
+    public UserInfoDetails(User user){
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.email = user.getEmail();
         this.authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toSet());
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
+        return this.authorities;
     }
 
     @Override
@@ -67,15 +60,5 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
     }
 }

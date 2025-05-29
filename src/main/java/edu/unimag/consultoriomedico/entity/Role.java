@@ -1,5 +1,6 @@
 package edu.unimag.consultoriomedico.entity;
 
+import edu.unimag.consultoriomedico.enums.ERole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,8 @@ import java.util.Set;
 public class Role {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private ERole name;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 }
