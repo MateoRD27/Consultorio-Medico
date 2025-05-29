@@ -1,9 +1,11 @@
 package edu.unimag.consultoriomedico.service;
 
 import edu.unimag.consultoriomedico.dto.MedicalRecordDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface MedicalRecordsService {
     //obtener todos los registros medicos
     List<MedicalRecordDTO> getAllMedicalRecords();

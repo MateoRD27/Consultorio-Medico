@@ -14,8 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping( "/api/consult-rooms")
 @RequiredArgsConstructor
-public class ConsultRoomController
-{
+public class ConsultRoomController {
     ConsultRoomService consultRoomService;
 
     @PostMapping

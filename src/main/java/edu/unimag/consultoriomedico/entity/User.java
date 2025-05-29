@@ -10,7 +10,12 @@ import lombok.Setter;
 import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "email")
+        })
+
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +26,12 @@ public class User {
     private String username;
 
     @NotBlank
-    private String password;
+    private String email;
 
     @NotBlank
-    private String email;
+    private String password;
+
+
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -33,4 +40,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles;
+
+    public User(String username, String email, String password, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

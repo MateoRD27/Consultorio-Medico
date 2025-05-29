@@ -1,9 +1,11 @@
 package edu.unimag.consultoriomedico.service;
 
 import edu.unimag.consultoriomedico.dto.PatientDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface PatientService {
     //Obtener todos los pacientes
     List<PatientDTO> getAllPatients();

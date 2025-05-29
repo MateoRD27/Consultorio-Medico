@@ -1,9 +1,11 @@
 package edu.unimag.consultoriomedico.service;
 
 import edu.unimag.consultoriomedico.dto.DoctorDTO;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public interface DoctorService {
     //obtener todos los doctores
     List<DoctorDTO> getAllDoctors();
