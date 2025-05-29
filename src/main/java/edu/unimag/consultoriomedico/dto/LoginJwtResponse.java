@@ -6,7 +6,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Builder
 public class LoginJwtResponse {
     private String token;
     private String type = "Bearer";

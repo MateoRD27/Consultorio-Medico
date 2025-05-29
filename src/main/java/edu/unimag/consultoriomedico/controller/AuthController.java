@@ -5,16 +5,11 @@ import edu.unimag.consultoriomedico.dto.LoginJwtResponse;
 import edu.unimag.consultoriomedico.dto.LoginRequest;
 import edu.unimag.consultoriomedico.dto.MessageResponse;
 import edu.unimag.consultoriomedico.dto.SignupRequest;
-import edu.unimag.consultoriomedico.repository.RoleRepository;
-import edu.unimag.consultoriomedico.repository.UserRepository;
-import edu.unimag.consultoriomedico.security.jwt.JwtUtil;
 import edu.unimag.consultoriomedico.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +31,6 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest dto) {
         MessageResponse messageResponse= authService.registerUser(dto);
-        return ResponseEntity.ok(messageResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(messageResponse);
     }
 }

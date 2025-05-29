@@ -1,5 +1,6 @@
 package edu.unimag.consultoriomedico.security.jwt;
 
+
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;
