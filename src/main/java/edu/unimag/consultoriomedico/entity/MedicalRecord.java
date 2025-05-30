@@ -30,7 +30,6 @@ public class MedicalRecord {
     @NotBlank(message = "Diagnosis is mandatory")
     String diagnosis;
 
-    @Lob //puede contener textos largos
     private String notes;
 
     @CreationTimestamp //asignar automáticamente la fecha y hora en el momento en que se crea la entidad
