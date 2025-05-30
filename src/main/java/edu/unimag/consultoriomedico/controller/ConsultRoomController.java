@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping( "/api/consult-rooms")
 @RequiredArgsConstructor
 public class ConsultRoomController {
-    ConsultRoomService consultRoomService;
+    private final ConsultRoomService consultRoomService;
 
     @PostMapping
-    public ResponseEntity<ConsultRoomDTO> createConsultRoom(ConsultRoomDTO consultRoomDto) {
+    public ResponseEntity<ConsultRoomDTO> createConsultRoom(@Valid @RequestBody ConsultRoomDTO consultRoomDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(consultRoomService.createConsultRoom(consultRoomDto));
     }
 
