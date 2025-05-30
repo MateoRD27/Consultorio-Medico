@@ -31,7 +31,7 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getDoctorById(id));
     }
 
-    @GetMapping("/{specialty}")
+    @GetMapping("/specialty/{specialty}")
     ResponseEntity<List<DoctorDTO>> getDoctorsBySpecialty(@PathVariable String specialty) {
         return ResponseEntity.ok(doctorService.getDoctorsBySpecialty(specialty));
     }
